@@ -27,29 +27,22 @@
                     <div class="row">
                         <div class="col">
                             <label class="font-weight-bold" for="fooditem">Item Name:</label>
-                            <input type="text" id="fooditem" class="form-control" placeholder="Item">
+                            <input type="text" id="fooditem" class="form-control" placeholder="Food Item">
                         </div>
                         <div class="col">
                             <label class="font-weight-bold" for="foodcalorie">Calorie Amount:</label>
-                            <input type="text" id="foodcalorie" class="form-control" placeholder="Calories">
+                            <input type="number" id="foodcalorie" class="form-control" placeholder="Calories">
                         </div>
                     </div>
-                    <button class="btn btn-outline-success float-left my-3" type="button">Add Item</button>
-                    <button class="btn btn-outline-secondary float-right my-3" type="button">Go Back</button>
+                    <button id="additembtn" class="btn btn-outline-success float-left my-3" type="button">Add Item</button>
+                    <button id="undochangesbtn" class="btn btn-outline-secondary float-right my-3" type="button">Go Back</button>
                     <!-- <button class="btn btn-outline-warning float-left my-3" type="button">Update Item</button>
                     <button class="btn btn-outline-danger float-right my-3" type="button">Delete Item</button> -->
                 </form>
             </div>
         </div>
         <h4 class="text-center">Total Calories: <span class="total-calories">0</span></h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <div class="row mx-1">
-                    <strong>Cras justo odio</strong>
-                    <button type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
-                </div>
-            </li>
-        </ul>
+        <ul class="list-group my-2"></ul>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
