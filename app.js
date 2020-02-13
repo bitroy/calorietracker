@@ -10,12 +10,35 @@ const ItemController = (function () {
     const itemsdata = {
         items: [],
         currentitem: null,
-        totalcalories: 0,
+        totalcalories: 0
     }
 
     return {
         getItems: function () {
             return itemsdata.items;
+        },
+        getCurrentItem: function () {
+            return itemsdata.currentitem;
+        },
+        setCurrentItem: function (item) {
+            itemsdata.currentitem = item;
+        },
+        getTotalCalories: function () {
+            let total = 0;
+            itemsdata.items.forEach(function (item) {
+                total += item.calories;
+            })
+            itemsdata.totalcalories = total;
+            return total;
+        },
+        getItemById: function (id) {
+            let searchitem = null;
+            itemsdata.items.forEach(function (item) {
+                if(item.id === id) {
+                    searchitem = item;
+                }
+            });
+            return searchitem;
         },
         addItem: function (inputs) {
             let id = 0;
@@ -26,9 +49,21 @@ const ItemController = (function () {
             }
 
             const newitem = new Item(id, inputs.itemname, parseInt(inputs.itemcalorie));
+           
             itemsdata.items.push(newitem);
 
             return newitem;
+        },
+        updateItem: function (inputs) {
+            let updateitem = null;
+            itemsdata.items.forEach(function (item) {
+                if(item.id == itemsdata.currentitem.id) {
+                    item.name = inputs.itemname;
+                    item.calories = inputs.calories;
+                    updateitem = item;
+                }
+            });
+            return updateitem;
         }
     }
 
@@ -38,6 +73,11 @@ const ItemController = (function () {
 const UIController = (function () {
 
     return {
+        initialRender: function () {
+            document.querySelector('#undochangesbtn').style.display = 'none';
+            document.querySelector('#deleteitembtn').style.display = 'none';
+            document.querySelector('#updateitembtn').style.display = 'none';
+        },
         fillItemList: function (items) {
             let listgroupitems = '';
             items.forEach(function (item) {
@@ -45,7 +85,7 @@ const UIController = (function () {
                 `<li class="list-group-item" id=${item.id}>
                     <div class="row mx-1">
                         <strong>Name: ${item.name}, Calories: ${item.calories}</strong>
-                        <button type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
+                        <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
                     </div>
                 </li>`;
             });
@@ -58,16 +98,31 @@ const UIController = (function () {
                 itemcalorie: document.querySelector('#foodcalorie').value
             }
         },
+        setTotalCalories: function (totalcalories) {
+            document.querySelector(".total-calories").innerHTML = `${totalcalories}`;
+        },
         addNewItem: function (newitem) {
             let listgroupitem = 
                 `<li class="list-group-item" id=${newitem.id}>
                     <div class="row mx-1">
                         <strong>Name: ${newitem.name}, Calories: ${newitem.calories}</strong>
-                        <button type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
+                        <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
                     </div>
                 </li>`;
             
             document.querySelector(".list-group").innerHTML += listgroupitem;
+        },
+        showEditForm: function () {
+            const currentitem = ItemController.getCurrentItem();
+            document.querySelector('#fooditem').value = currentitem.name;
+            document.querySelector('#foodcalorie').value = currentitem.calories;
+            document.querySelector('#additembtn').style.display = 'none';
+            document.querySelector('#undochangesbtn').style.display = 'block';
+            document.querySelector('#deleteitembtn').style.display = 'block';
+            document.querySelector('#updateitembtn').style.display = 'block';
+        },
+        updateItem: function (updateitem) {
+            console.log(document.querySelector(updateitem.id));
         },
         resetFormUI: function () {
             document.querySelector("#fooditem").value = '';
@@ -85,6 +140,29 @@ const AppController = (function (ItemController, UIController) {
         let inputs = UIController.getInputItems();
         if(inputs.itemname !== '' && (inputs.itemcalorie !== '' && inputs.itemcalorie > 0)) {
             UIController.addNewItem(ItemController.addItem(inputs));
+            UIController.setTotalCalories(ItemController.getTotalCalories());
+            UIController.resetFormUI();
+        } else {
+            UIController.showError();
+        }
+        event.preventDefault();
+    }
+
+    const editItemForm = function (event) {
+        if(event.target.getAttribute('id') === 'edititembtn') {
+            const id = event.target.closest('.list-group-item').getAttribute('id');
+            const edititem = ItemController.getItemById(parseInt(id));
+            ItemController.setCurrentItem(edititem);
+            UIController.showEditForm(edititem);
+        }
+        event.preventDefault();
+    }
+
+    const updateItem = function (event) {
+        let inputs = UIController.getInputItems();
+        if(inputs.itemname !== '' && (inputs.itemcalorie !== '' && inputs.itemcalorie > 0)) {
+            UIController.updateItem(ItemController.updateItem(inputs));
+            UIController.setTotalCalories(ItemController.getTotalCalories());
             UIController.resetFormUI();
         } else {
             UIController.showError();
@@ -93,13 +171,17 @@ const AppController = (function (ItemController, UIController) {
     }
 
     const loadEventListeners = function () {
-        document.querySelector('#additembtn').addEventListener('click', addItem);    
+        document.querySelector('#additembtn').addEventListener('click', addItem);
+        document.querySelector('.list-group').addEventListener('click', editItemForm);
+        document.querySelector("#updateitembtn").addEventListener('click', updateItem);
     }
 
     return {
         initialize: function () {
             loadEventListeners();
+            UIController.initialRender();
             UIController.fillItemList(ItemController.getItems());
+            UIController.setTotalCalories(ItemController.getTotalCalories());
         }
     }
 
