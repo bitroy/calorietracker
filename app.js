@@ -43,15 +43,11 @@ const ItemController = (function () {
         addItem: function (inputs) {
             let id = 0;
             let totalitems = itemsdata.items.length
-
             if(totalitems > 0) {
                 id = itemsdata.items[totalitems - 1].id + 1;
             }
-
             const newitem = new Item(id, inputs.itemname, parseInt(inputs.itemcalorie));
-           
             itemsdata.items.push(newitem);
-
             return newitem;
         },
         updateItem: function (inputs) {
@@ -59,7 +55,7 @@ const ItemController = (function () {
             itemsdata.items.forEach(function (item) {
                 if(item.id == itemsdata.currentitem.id) {
                     item.name = inputs.itemname;
-                    item.calories = inputs.calories;
+                    item.calories = inputs.itemcalorie;
                     updateitem = item;
                 }
             });
@@ -74,6 +70,7 @@ const UIController = (function () {
 
     return {
         initialRender: function () {
+            document.querySelector('#additembtn').style.display = 'block';
             document.querySelector('#undochangesbtn').style.display = 'none';
             document.querySelector('#deleteitembtn').style.display = 'none';
             document.querySelector('#updateitembtn').style.display = 'none';
@@ -82,7 +79,7 @@ const UIController = (function () {
             let listgroupitems = '';
             items.forEach(function (item) {
                 listgroupitems += 
-                `<li class="list-group-item" id=${item.id}>
+                `<li class="list-group-item" id="item-${item.id}">
                     <div class="row mx-1">
                         <strong>Name: ${item.name}, Calories: ${item.calories}</strong>
                         <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
@@ -95,7 +92,7 @@ const UIController = (function () {
         getInputItems: function () {
             return {
                 itemname: document.querySelector('#fooditem').value,
-                itemcalorie: document.querySelector('#foodcalorie').value
+                itemcalorie: parseInt(document.querySelector('#foodcalorie').value)
             }
         },
         setTotalCalories: function (totalcalories) {
@@ -103,7 +100,7 @@ const UIController = (function () {
         },
         addNewItem: function (newitem) {
             let listgroupitem = 
-                `<li class="list-group-item" id=${newitem.id}>
+                `<li class="list-group-item" id="item-${newitem.id}">
                     <div class="row mx-1">
                         <strong>Name: ${newitem.name}, Calories: ${newitem.calories}</strong>
                         <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
@@ -122,7 +119,11 @@ const UIController = (function () {
             document.querySelector('#updateitembtn').style.display = 'block';
         },
         updateItem: function (updateitem) {
-            console.log(document.querySelector(updateitem.id));
+            document.querySelector(`#item-${updateitem.id}`).innerHTML = 
+                `<div class="row mx-1">
+                    <strong>Name: ${updateitem.name}, Calories: ${updateitem.calories}</strong>
+                    <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
+                </div>`;
         },
         resetFormUI: function () {
             document.querySelector("#fooditem").value = '';
@@ -150,7 +151,7 @@ const AppController = (function (ItemController, UIController) {
 
     const editItemForm = function (event) {
         if(event.target.getAttribute('id') === 'edititembtn') {
-            const id = event.target.closest('.list-group-item').getAttribute('id');
+            const id = event.target.closest('.list-group-item').getAttribute('id').split('item-')[1];
             const edititem = ItemController.getItemById(parseInt(id));
             ItemController.setCurrentItem(edititem);
             UIController.showEditForm(edititem);
@@ -164,6 +165,7 @@ const AppController = (function (ItemController, UIController) {
             UIController.updateItem(ItemController.updateItem(inputs));
             UIController.setTotalCalories(ItemController.getTotalCalories());
             UIController.resetFormUI();
+            UIController.initialRender();
         } else {
             UIController.showError();
         }
