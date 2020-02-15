@@ -31,6 +31,9 @@ const ItemController = (function () {
             itemsdata.totalcalories = total;
             return total;
         },
+        setTotalCalories: function (calories) {
+            itemsdata.totalcalories = calories;
+        },
         getItemById: function (id) {
             let searchitem = null;
             itemsdata.items.forEach(function (item) {
@@ -60,6 +63,15 @@ const ItemController = (function () {
                 }
             });
             return updateitem;
+        },
+        deleteItem: function (currentitem) {
+            const calories = parseInt(this.getTotalCalories() - currentitem.calories);
+            this.setTotalCalories(calories);
+            itemsdata.items = itemsdata.items.filter(function (item) {
+                if(currentitem.id !== item.id) {
+                    return item;
+                }
+            });
         }
     }
 
@@ -125,10 +137,19 @@ const UIController = (function () {
                     <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
                 </div>`;
         },
+        deleteItem: function (id) {
+            document.querySelector(`#item-${id}`).remove();
+            this.resetFormUI();
+            this.initialRender();
+        },
         resetFormUI: function () {
             document.querySelector("#fooditem").value = '';
             document.querySelector("#foodcalorie").value = '';
             document.querySelector("#additembtn").blur();
+        },
+        clearEditUI: function () {
+            this.resetFormUI();
+            this.initialRender();
         }
     }
 
@@ -164,18 +185,30 @@ const AppController = (function (ItemController, UIController) {
         if(inputs.itemname !== '' && (inputs.itemcalorie !== '' && inputs.itemcalorie > 0)) {
             UIController.updateItem(ItemController.updateItem(inputs));
             UIController.setTotalCalories(ItemController.getTotalCalories());
-            UIController.resetFormUI();
-            UIController.initialRender();
+            UIController.clearEditUI();
         } else {
             UIController.showError();
         }
         event.preventDefault();
     }
 
+    const deleteItem = function (event) {
+        ItemController.deleteItem(ItemController.getCurrentItem());
+        UIController.deleteItem(ItemController.getCurrentItem().id);
+        UIController.setTotalCalories(ItemController.getTotalCalories());
+        event.preventDefault();
+    }
+
+    const clearEditUI = function (event) {
+        UIController.clearEditUI();
+    }
+
     const loadEventListeners = function () {
         document.querySelector('#additembtn').addEventListener('click', addItem);
         document.querySelector('.list-group').addEventListener('click', editItemForm);
         document.querySelector("#updateitembtn").addEventListener('click', updateItem);
+        document.querySelector("#undochangesbtn").addEventListener('click', clearEditUI);
+        document.querySelector("#deleteitembtn").addEventListener('click', deleteItem);
     }
 
     return {
