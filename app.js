@@ -72,6 +72,11 @@ const ItemController = (function () {
                     return item;
                 }
             });
+        },
+        clearAll: function () {
+            itemsdata.items = [];
+            itemsdata.currentitem = null;
+            itemsdata.totalcalories = 0;
         }
     }
 
@@ -150,6 +155,14 @@ const UIController = (function () {
         clearEditUI: function () {
             this.resetFormUI();
             this.initialRender();
+        },
+        clearAllUI: function () {
+            Array.from(document.querySelectorAll(".list-group-item")).forEach(function (item) {
+                item.remove();
+            });
+            this.setTotalCalories(0);
+            this.resetFormUI();
+            this.initialRender();
         }
     }
 
@@ -201,14 +214,22 @@ const AppController = (function (ItemController, UIController) {
 
     const clearEditUI = function (event) {
         UIController.clearEditUI();
+        event.preventDefault();
+    }
+
+    const clearAll = function (event) {
+        ItemController.clearAll();
+        UIController.clearAllUI();
+        event.preventDefault();
     }
 
     const loadEventListeners = function () {
-        document.querySelector('#additembtn').addEventListener('click', addItem);
         document.querySelector('.list-group').addEventListener('click', editItemForm);
+        document.querySelector('#additembtn').addEventListener('click', addItem);
         document.querySelector("#updateitembtn").addEventListener('click', updateItem);
         document.querySelector("#undochangesbtn").addEventListener('click', clearEditUI);
         document.querySelector("#deleteitembtn").addEventListener('click', deleteItem);
+        document.querySelector("#clearallbtn").addEventListener('click', clearAll);
     }
 
     return {
