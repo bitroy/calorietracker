@@ -1,3 +1,46 @@
+// Storage Controller
+const StorageController = (function () {
+    
+    let items;
+    return {
+        getItems: function () {
+            if(localStorage.getItem('items') === null) {
+                items = [];
+            } else {
+                items = JSON.parse(localStorage.getItem('items'));
+            }
+
+            return items;
+        },
+        setItem: function (item) {
+            if(localStorage.getItem('items') === null) {
+                items = [];
+            } else {
+                items = JSON.parse(localStorage.getItem('items'));
+            }
+            items.push(item);
+            localStorage.setItem('items', JSON.stringify(items));
+        },
+        updateItem: function (item) {
+            let items = JSON.parse(localStorage.getItem('items'));
+            items.forEach(function (currentitem, index) {
+                if(currentitem.id === item.id) {
+                    items.splice(index, 1, item);
+                }
+            });
+            localStorage.setItem('items', JSON.stringify(items));
+        },
+        deleteItem: function (item) {
+            let items = JSON.parse(localStorage.getItem('items'));
+            items.splice(items.indexOf(item.id), 1);
+            localStorage.setItem('items', JSON.stringify(items));
+        },
+        clearStorage: function () {
+            localStorage.removeItem('items');
+        }
+    }
+})();
+
 // Item Controller
 const ItemController = (function () {
     
@@ -8,7 +51,7 @@ const ItemController = (function () {
     }
 
     const itemsdata = {
-        items: [],
+        items: StorageController.getItems(),
         currentitem: null,
         totalcalories: 0
     }
@@ -157,6 +200,7 @@ const UIController = (function () {
             this.initialRender();
         },
         clearAllUI: function () {
+            document.querySelector('#clearallbtn').blur();
             Array.from(document.querySelectorAll(".list-group-item")).forEach(function (item) {
                 item.remove();
             });
@@ -169,13 +213,15 @@ const UIController = (function () {
 })();
 
 // App Controller
-const AppController = (function (ItemController, UIController) {
+const AppController = (function (StorageController, ItemController, UIController) {
     
     const addItem = function (event) {
         let inputs = UIController.getInputItems();
         if(inputs.itemname !== '' && (inputs.itemcalorie !== '' && inputs.itemcalorie > 0)) {
-            UIController.addNewItem(ItemController.addItem(inputs));
+            const newitem = ItemController.addItem(inputs);
+            UIController.addNewItem(newitem);
             UIController.setTotalCalories(ItemController.getTotalCalories());
+            StorageController.setItem(newitem);
             UIController.resetFormUI();
         } else {
             UIController.showError();
@@ -196,7 +242,9 @@ const AppController = (function (ItemController, UIController) {
     const updateItem = function (event) {
         let inputs = UIController.getInputItems();
         if(inputs.itemname !== '' && (inputs.itemcalorie !== '' && inputs.itemcalorie > 0)) {
-            UIController.updateItem(ItemController.updateItem(inputs));
+            const updateditem = ItemController.updateItem(inputs);
+            StorageController.updateItem(updateditem);
+            UIController.updateItem(updateditem);
             UIController.setTotalCalories(ItemController.getTotalCalories());
             UIController.clearEditUI();
         } else {
@@ -206,8 +254,10 @@ const AppController = (function (ItemController, UIController) {
     }
 
     const deleteItem = function (event) {
-        ItemController.deleteItem(ItemController.getCurrentItem());
-        UIController.deleteItem(ItemController.getCurrentItem().id);
+        const currentitem = ItemController.getCurrentItem();
+        StorageController.deleteItem(currentitem);
+        ItemController.deleteItem(currentitem);
+        UIController.deleteItem(currentitem.id);
         UIController.setTotalCalories(ItemController.getTotalCalories());
         event.preventDefault();
     }
@@ -220,6 +270,7 @@ const AppController = (function (ItemController, UIController) {
     const clearAll = function (event) {
         ItemController.clearAll();
         UIController.clearAllUI();
+        StorageController.clearStorage();
         event.preventDefault();
     }
 
@@ -241,6 +292,6 @@ const AppController = (function (ItemController, UIController) {
         }
     }
 
-})(ItemController, UIController);
+})(StorageController, ItemController, UIController);
 
 AppController.initialize();
