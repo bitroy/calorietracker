@@ -28,10 +28,16 @@
                         <div class="col">
                             <label class="font-weight-bold" for="fooditem">Item Name:</label>
                             <input type="text" id="fooditem" class="form-control" placeholder="Food Item">
+                            <div class="invalid-input">
+                                Please provide a food item
+                            </div>
                         </div>
                         <div class="col">
                             <label class="font-weight-bold" for="foodcalorie">Calorie Amount:</label>
                             <input type="number" id="foodcalorie" class="form-control" placeholder="Calories">
+                            <div class="invalid-input">
+                                Please provide the food item calories
+                            </div>
                         </div>
                     </div>
                     <button id="additembtn" class="btn btn-outline-success float-left my-3" type="button">Add Item</button>
@@ -51,4 +57,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="app.js"></script>
 </body>
+<style scoped>
+    .invalid-input {
+        color: red;
+    }
+</style>
 </html>
