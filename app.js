@@ -146,10 +146,9 @@ const UIController = (() => {
             items.forEach(function (item) {
                 listgroupitems += 
                 `<li class="list-group-item" id="item-${item.id}">
-                    <div class="row mx-1">
-                        <strong>Name: ${item.name}, Calories: ${item.calories}</strong>
-                        <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
-                    </div>
+                    <div><strong>Name: ${item.name}</strong></div> 
+                    <div><strong>Calories: ${item.calories}</strong></div>
+                    <div><button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button></div>
                 </li>`;
             });
 
@@ -165,12 +164,11 @@ const UIController = (() => {
             document.querySelector(".total-calories").innerHTML = `${totalcalories}`;
         },
         addNewItem: (newitem) => {
-            let listgroupitem = 
+            let listgroupitem =
                 `<li class="list-group-item" id="item-${newitem.id}">
-                    <div class="row mx-1">
-                        <strong>Name: ${newitem.name}, Calories: ${newitem.calories}</strong>
-                        <button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button> 
-                    </div>
+                    <div><strong>Name: ${newitem.name}</strong></div> 
+                    <div><strong>Calories: ${newitem.calories}</strong></div>
+                    <div><button id="edititembtn" type="button" class="btn btn-outline-secondary ml-auto">Edit</button></div>
                 </li>`;
             
             document.querySelector(".list-group").innerHTML += listgroupitem;

@@ -13,10 +13,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><b>Calorie Tracker</b></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a class="navbar-brand brand-text" href="#">Calorie Tracker</a>
         <button id="clearallbtn" class="btn btn-danger ml-auto my-2" type="button">CLEAR ALL</button>
     </nav>
 
@@ -42,13 +39,15 @@
                         </div>
                     </div>
                     <button id="additembtn" class="btn btn-success float-left my-3" type="button">Add Item</button>
-                    <button id="undochangesbtn" class="btn btn-secondary float-left my-3" type="button">Go Back</button>
-                    <button id="deleteitembtn" class="btn btn-danger float-right my-3" type="button">Delete Item</button>
-                    <button id="updateitembtn" class="btn btn-warning float-right m-3" type="button">Update Item</button>
+                    <div class="update_buttons">
+                        <button id="undochangesbtn" class="btn btn-secondary float-left" type="button">Go Back</button>
+                        <button id="updateitembtn" class="btn btn-warning" type="button">Update Item</button>
+                        <button id="deleteitembtn" class="btn btn-danger float-right" type="button">Delete Item</button>
+                    </div>
                 </form>
             </div>
         </div>
-        <h1 class="text-center">Total Calories: <span class="total-calories">0</span></h1>
+        <div class="text-center">Total Calories: <span class="total-calories">0</span></div>
         <ul class="list-group my-2"></ul>
     </div>
     <!-- Optional JavaScript -->
@@ -58,17 +57,5 @@
     <script src="https://unpkg.com/browse/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="app.js"></script>
 </body>
-<style scoped>
-    .invalid-input {
-        color: red;
-    }
-
-    .btn {
-        font-weight: bold;
-    }
-
-    .btn-success {
-        color:black;
-    }
-</style>
+<link rel="stylesheet" href="style.css">
 </html>

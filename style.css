@@ -1,0 +1,55 @@
+.invalid-input {
+    color: red;
+}
+
+.btn {
+    font-weight: bold;
+}
+
+.btn-success {
+    color:black;
+}
+
+.list-group-item {
+    display: flex;
+    flex-direction: column;
+}
+
+#edititembtn {
+    float: right;
+}
+
+label {
+    font-size: 4vw;
+}
+
+.update_buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.update_buttons button {
+    margin-top: 1rem;
+}
+
+.text-center {
+    font-size: 6vw;
+    font-weight: bold;
+}
+
+.brand-text {
+    font-size: 7vw;
+    font-weight: bold;
+}
+
+@media all and (max-width: 1024px) and (min-width: 700px)  {
+    label {
+        font-size: 3vw;
+    }
+}
+
+@media all and (max-width: 1440px) and (min-width: 1024px)  {
+    label {
+        font-size: 2vw;
+    }
+}
