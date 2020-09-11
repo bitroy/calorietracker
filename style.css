@@ -42,9 +42,36 @@ label {
     font-weight: bold;
 }
 
+@media all and (min-width: 700px) {
+    .update_buttons {
+        display: block;
+    }
+
+    #undochangesbtn {
+        float: left;
+    }
+
+    #updateitembtn {
+        float: right;
+        margin-right: 0.5rem;
+    }
+
+    #deleteitembtn {
+        float: right;
+    }
+}
+
 @media all and (max-width: 1024px) and (min-width: 700px)  {
     label {
         font-size: 3vw;
+    }
+
+    .brand-text {
+        font-size: 5vw;
+    }
+
+    .text-center {
+        font-size: 4vw;
     }
 }
 
