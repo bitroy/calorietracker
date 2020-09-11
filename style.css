@@ -15,14 +15,6 @@
     flex-direction: column;
 }
 
-#edititembtn {
-    float: right;
-}
-
-label {
-    font-size: 4vw;
-}
-
 .update_buttons {
     display: flex;
     flex-direction: column;
@@ -40,6 +32,14 @@ label {
 .brand-text {
     font-size: 7vw;
     font-weight: bold;
+}
+
+label {
+    font-size: 4vw;
+}
+
+#edititembtn {
+    float: right;
 }
 
 @media all and (min-width: 700px) {
@@ -78,5 +78,27 @@ label {
 @media all and (max-width: 1440px) and (min-width: 1024px)  {
     label {
         font-size: 2vw;
+    }
+
+    .brand-text {
+        font-size: 3vw;
+    }
+
+    .text-center {
+        font-size: 3vw;
+    }
+}
+
+@media all and (min-width: 1441px)  {
+    label {
+        font-size: 2vw;
+    }
+
+    .brand-text {
+        font-size: 2vw;
+    }
+
+    .text-center {
+        font-size: 1vw;
     }
 }
